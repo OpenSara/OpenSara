@@ -1,0 +1,174 @@
+" Descripation : Facilitates vim settings 
+" Version      : 2.0
+" Author       : RollStone,jealdean@outlook.com
+" Copyright    : RollStone (2007-2014).
+" -------------------- Copyright Header End -----------------------------------
+"
+" Overview for maintainers :
+" The file is divided into following sections. You may add yours or update these
+" if/when you choose to enhance this setting file.
+"
+" + General Settings
+" + Tips(just need to how use these functions)
+" + Autocmds
+" + Mappings
+"{{{ ---------------- General Settings Begin ---------------------------------
+"MC: My Contaction
+abbr mc RollStone,jealdean@outlook.com
+
+"Leader
+let g:mapleader=';'
+let g:leader=';'
+
+"Just more like vim,less vi
+set nocompatible
+
+"backup
+set nobackup
+
+"dirs
+set autochdir
+set autoread
+set autowrite
+
+"complete
+set complete+=k
+set completeopt=longest,menu
+
+"encodes
+set fileencodings=utf-8,gbk,gb18030,chinese
+
+"indent
+set autoindent
+set smartindent
+set noexpandtab
+set tabstop=4
+set shiftwidth=4
+set formatoptions+=mM
+set cinoptions=:0,l1,t0,g0
+
+"search
+set showmatch
+set hlsearch
+set smartcase
+set ignorecase
+set incsearch
+
+"statusline
+set title
+set showcmd
+set laststatus=2
+set statusline=%F%m%r%h%w,%{&ff},Type:%y,[ASCII:\%03.3b,HEX:0x\%02.2B][%l,%v][Total:%L][Rate:%p%%]\ %*%=\ %{strftime(\"%d-%m-%y\ %H:%M\")}
+set wildmenu
+
+"tabulation
+set ruler
+set number
+set cursorline
+"set cursorcolumn
+"highlight cursorline ctermbg=lightgray
+"highlight cursorcolumn ctermbg=lightgray
+
+"wrap
+set nowrap
+set nowrapscan
+
+"others
+set backspace=indent,eol,start
+set wildignore=*.bak,*.o,*.e,*~
+set browsedir=current
+set sessionoptions-=curdir
+set ttimeoutlen=150
+set vb t_vb=
+
+"some common gates
+syntax on
+filetype plugin indent on
+"}}} ---------------- General Settings End -----------------------------------
+
+"{{{ ---------------- Tips Begin ---------------------------------------------
+"notice: n just be in normal mode
+"tip1. match ()/{}/[]
+"n: % (first chang into normal mode,and press shift + 5)
+
+"tip2. find the manual content
+"n: K (first chang into normal mode,and press shift + K)
+"}}} ---------------- Tips End -----------------------------------------------
+
+"{{{ ---------------- Autocmds Begin -----------------------------------------
+if has("autocmd")
+"when modifies vimrc or .vimrc reload it
+au! BufWritePost [ _.]vimrc source ~/.vimrc
+
+"auto chdir to curdir
+au BufEnter * :lchdir %:p:h
+
+"change to the lastest cursor position
+au BufReadPost * if line("‘\"") > 0 && line("‘\"") <= line("$") | exe "normal! g`\"" | endif 
+endif " has (autocmd)"
+"}}} ---------------- Autocmds End -------------------------------------------
+
+"{{{ ---------------- Mappings Begin -----------------------------------------
+"display line number or not
+nnoremap <leader> sn :set nu!<cr>
+
+"F1 - overrule Linux F1
+map <silent> <F1> <esc>:exec "help ".expand("<cword>")<cr>
+
+"F2 - call file explorer Ex
+map  <silent> <F2>        :Explorer
+imap <silent> <F2>   <esc>:Explorer
+
+"F3 - write file without confirmation
+map  <silent> <F2>        :write<cr>
+imap <silent> <F2>   <esc>:write<cr>
+
+"F4 - remove trail white-space
+map  <silent> <F2>        :%s/[ \t\r]\+$//g<cr>
+imap <silent> <F2>   <esc>:%s/[ \t\r]\+$//g<cr>
+
+"F5-F8 :quickfix :open/close error windows,display prev/next error
+map  <silent> <F5>        :copen<cr>
+map  <silent> <F6>        :cclose<cr>
+map  <silent> <F7>        :cp<cr>
+map  <silent> <F8>        :cn<cr>
+imap <silent> <F5>   <esc>:copen<cr>
+imap <silent> <F6>   <esc>:cclose<cr>
+imap <silent> <F7>   <esc>:cp<cr>
+imap <silent> <F8>   <esc>:cn<cr>
+
+"autocomplete parenthesis, brackets and braces
+inoremap ( ()<Left>
+        inoremap [ []<Left>
+        inoremap { {}<Left>
+        vnoremap ( s()<Esc>P<Right>%
+            vnoremap [ s[]<Esc>P<Right>%
+            vnoremap { s{}<Esc>P<Right>%
+
+            "autocomplete quotes (select mode)
+            xnoremap  ‘  s‘‘<Esc>P<Right>
+            xnoremap  "  s""<Esc>P<Right>
+            xnoremap  `  s``<Esc>P<Right>
+
+            "Open includes files in a new split window
+            set path=.,include,../include,/usr/include,/usr/local/include
+            nmap gf <c-w><c-f>
+
+            "{{User defines functions and its‘ map
+
+            "Format C/CPP codes,and return current line
+            function! UDFormatCppCode()
+            let s:backupCurLine=line(‘.‘)
+            exec "normal! gg=G <cr>"
+            exec ":".s:backupCurLine
+            endfunc
+            nmap fmt :call UDFormatCppCode()<cr>
+            imap fmt <esc>:call UDFormatCppCode()<cr>o
+            "}}
+            "}}}
+set smartindent
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set nocompatible
+
